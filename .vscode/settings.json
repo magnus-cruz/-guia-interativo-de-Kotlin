@@ -1,0 +1,23 @@
+{
+    "workbench.colorTheme": "Default Light+",
+    "workbench.colorCustomizations": {
+        "editor.background": "#FBF8FF",
+        "sideBar.background": "#F4EEFF",
+        "activityBar.background": "#34008D",
+        "activityBar.foreground": "#FFFFFF",
+        "titleBar.activeBackground": "#F3ECFF",
+        "titleBar.activeForeground": "#200057",
+        "titleBar.inactiveBackground": "#34008D",
+        "titleBar.inactiveForeground": "#200057",
+        "statusBar.background": "#3C00A2",
+        "statusBar.foreground": "#FBF9FF",
+        "button.background": "#8E63D9",
+        "button.foreground": "#FFFFFF",
+        "focusBorder": "#A47BFF",
+        "statusBar.debuggingBackground": "#3C00A2",
+        "statusBar.debuggingForeground": "#FBF9FF",
+        "statusBar.noFolderBackground": "#3C00A2",
+        "statusBar.noFolderForeground": "#FBF9FF"
+    },
+    "windowColors.baseColor": "#F3ECFF"
+}

@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprendendo Kotlin</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d14;
+    --panel: #13131f;
+    --card: #1a1a2e;
+    --border: #2a2a45;
+    --kotlin-purple: #7c4dff;
+    --kotlin-orange: #ff6b35;
+    --kotlin-teal: #00e5cc;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --success: #00e5a0;
+    --number: #ff79c6;
+    --string: #f1fa8c;
+    --keyword: #bd93f9;
+    --comment: #6272a4;
+    --function: #50fa7b;
+    --type: #8be9fd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 20%, rgba(124,77,255,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,107,53,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--kotlin-purple), var(--kotlin-orange));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    box-shadow: 0 0 30px rgba(124,77,255,0.4);
+  }
+
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 30%, var(--kotlin-purple) 70%, var(--kotlin-orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-top: 10px;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    background: var(--border);
+    border-radius: 99px;
+    height: 6px;
+    margin: 32px 0;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--kotlin-purple), var(--kotlin-orange));
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 12px rgba(124,77,255,0.6);
+    width: 0%;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  /* Navigation tabs */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    background: var(--panel);
+    padding: 8px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 100px;
+    padding: 10px 14px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.25s;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .tab:hover { color: var(--text); background: var(--border); }
+
+  .tab.active {
+    background: linear-gradient(135deg, var(--kotlin-purple), #5c35cc);
+    color: white;
+    box-shadow: 0 4px 16px rgba(124,77,255,0.4);
+  }
+
+  /* Lesson sections */
+  .lesson {
+    display: none;
+    animation: fadeUp 0.5s ease both;
+  }
+  .lesson.active { display: block; }
+
+  .lesson-header {
+    margin-bottom: 28px;
+  }
+
+  .lesson-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124,77,255,0.15);
+    border: 1px solid rgba(124,77,255,0.3);
+    color: var(--kotlin-purple);
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.lesson-header h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.lesson-header p {
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+  /* Code cards */
+.code-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    animation: fadeUp 0.4s ease both;
+}
+
+.code-card:hover {
+    border-color: rgba(124,77,255,0.4);
+    transform: translateY(-2px);
+  }
+
+  .code-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-red { background: #ff5f57; }
+  .dot-yellow { background: #febc2e; }
+  .dot-green { background: #28c840; }
+
+  .copy-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .copy-btn:hover { border-color: var(--kotlin-teal); color: var(--kotlin-teal); }
+  .copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+  pre {
+    padding: 24px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  /* Syntax highlighting */
+  .kw { color: var(--keyword); font-weight: 600; }
+  .str { color: var(--string); }
+  .num { color: var(--number); }
+  .cmt { color: var(--comment); font-style: italic; }
+  .fn { color: var(--function); }
+  .tp { color: var(--type); }
+  .op { color: var(--kotlin-orange); }
+
+  /* Output box */
+  .output-box {
+    background: rgba(0,229,204,0.05);
+    border-top: 1px solid rgba(0,229,204,0.2);
+    padding: 14px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--kotlin-teal);
+  }
+
+  .output-box::before {
+    content: '▶ Saída: ';
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* Concept blocks */
+  .concept {
+    background: rgba(124,77,255,0.07);
+    border-left: 3px solid var(--kotlin-purple);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #c5c5e8;
+  }
+
+  .concept strong { color: var(--kotlin-purple); }
+
+  .tip {
+    background: rgba(0,229,204,0.07);
+    border-left: 3px solid var(--kotlin-teal);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #a0e8e0;
+  }
+
+  .tip::before { content: '💡 '; }
+
+  /* Grid for multiple cards */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* Section title */
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--kotlin-orange);
+    margin: 32px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* Navigation buttons */
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-secondary {
+    background: var(--panel);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-secondary:hover { color: var(--text); border-color: var(--text); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--kotlin-purple), #5c35cc);
+    color: white;
+    box-shadow: 0 4px 20px rgba(124,77,255,0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(124,77,255,0.5);
+  }
+
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none !important; }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Inline code */
+  code {
+    background: rgba(124,77,255,0.15);
+    color: var(--kotlin-purple);
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--panel); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--kotlin-purple); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">K</div>
+    </div>
+    <h1>Aprendendo Kotlin</h1>
+    <p>Do básico ao avançado com exemplos práticos e reais</p>
+  </header>
+
+  <div class="progress-label">
+    <span>Progresso</span>
+    <span id="progress-text">Módulo 1 de 5</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showLesson(0)">01 · Básico</button>
+    <button class="tab" onclick="showLesson(1)">02 · Funções</button>
+    <button class="tab" onclick="showLesson(2)">03 · Classes</button>
+    <button class="tab" onclick="showLesson(3)">04 · Coleções</button>
+    <button class="tab" onclick="showLesson(4)">05 · Avançado</button>
+  </div>
+
+  <!-- ==================== MÓDULO 1: BÁSICO ==================== -->
+  <div class="lesson active" id="lesson-0">
+    <div class="lesson-header">
+      <div class="lesson-badge">📦 Módulo 1</div>
+      <h2>Variáveis, Tipos e Controle de Fluxo</h2>
+      <p>Os blocos fundamentais de qualquer programa Kotlin — como declarar variáveis, trabalhar com tipos e controlar o fluxo da execução.</p>
+    </div>
+
+    <div class="section-title">Variáveis</div>
+
+    <div class="concept">
+      Em Kotlin, usamos <strong>val</strong> para valores imutáveis (como <code>final</code> no Java) e <strong>var</strong> para variáveis que podem mudar. O Kotlin infere o tipo automaticamente!
+    </div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+      <div style="display:flex;gap:6px;align-items:center">
+    <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">variables.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="cmt">// val = imutável (não pode ser reatribuído)</span>
+    <span class="kw">val</span> nome: <span class="tp">String</span> = <span class="str">"Kotlin"</span>
+    <span class="kw">val</span> versao = <span class="num">2.0</span>  <span class="cmt">// tipo inferido automaticamente</span>
+
+    <span class="cmt">// var = mutável (pode mudar de valor)</span>
+    <span class="kw">var</span> contador = <span class="num">0</span>
+    contador = <span class="num">10</span>   <span class="cmt">// ✅ permitido</span>
+
+    <span class="cmt">// Tipos básicos</span>
+    <span class="kw">val</span> inteiro: <span class="tp">Int</span> = <span class="num">42</span>
+    <span class="kw">val</span> decimal: <span class="tp">Double</span> = <span class="num">3.14</span>
+    <span class="kw">val</span> texto: <span class="tp">String</span> = <span class="str">"Olá, mundo!"</span>
+    <span class="kw">val</span> ativo: <span class="tp">Boolean</span> = <span class="kw">true</span>
+    <span class="kw">val</span> letra: <span class="tp">Char</span> = <span class="str">'K'</span>
+
+    <span class="cmt">// String templates — muito úteis!</span>
+    println(<span class="str">"Linguagem: <span class="op">$nome</span> versão <span class="op">$versao</span>"</span>)
+    println(<span class="str">"Dois mais dois = <span class="op">${2 + 2}</span>"</span>)
+}</pre>
+      <div class="output-box">Linguagem: Kotlin versão 2.0<br>Dois mais dois = 4</div>
+    </div>
+
+    <div class="section-title">Nullable — o fim dos NullPointerException</div>
+
+    <div class="concept">
+      O sistema de tipos do Kotlin distingue entre tipos que <strong>podem ser nulos</strong> (<code>String?</code>) e os que não podem (<code>String</code>). Isso elimina a maioria dos NPE em tempo de compilação.
+    </div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">nullable.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="kw">var</span> nome: <span class="tp">String</span> = <span class="str">"Ana"</span>
+    <span class="cmt">// nome = null  ← ERRO de compilação! 🚫</span>
+
+    <span class="kw">var</span> apelido: <span class="tp">String?</span> = <span class="str">"Aninha"</span>
+    apelido = <span class="kw">null</span>   <span class="cmt">// ✅ permitido com "?"</span>
+
+    <span class="cmt">// Safe call operator — não lança exceção</span>
+    println(apelido<span class="op">?.</span>length)   <span class="cmt">// imprime: null</span>
+
+    <span class="cmt">// Elvis operator — valor padrão se nulo</span>
+    <span class="kw">val</span> tamanho = apelido<span class="op">?.</span>length <span class="op">?:</span> <span class="num">0</span>
+    println(<span class="str">"Tamanho: <span class="op">$tamanho</span>"</span>)   <span class="cmt">// imprime: 0</span>
+
+    <span class="cmt">// Not-null assertion (use com cuidado!)</span>
+    <span class="kw">val</span> str: <span class="tp">String?</span> = <span class="str">"existe"</span>
+    println(str<span class="op">!!</span>.length)   <span class="cmt">// lança NPE se for null</span>
+}</pre>
+      <div class="output-box">null<br>Tamanho: 0<br>6</div>
+    </div>
+
+    <div class="section-title">Controle de Fluxo</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">flow.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="kw">val</span> nota = <span class="num">85</span>
+
+    <span class="cmt">// if como expressão (retorna valor!)</span>
+    <span class="kw">val</span> resultado = <span class="kw">if</span> (nota >= <span class="num">70</span>) <span class="str">"Aprovado"</span> <span class="kw">else</span> <span class="str">"Reprovado"</span>
+    println(resultado)
+
+    <span class="cmt">// when — equivalente ao switch, mas muito mais poderoso</span>
+    <span class="kw">val</span> conceito = <span class="kw">when</span> {
+        nota >= <span class="num">90</span> -> <span class="str">"A — Excelente!"</span>
+        nota >= <span class="num">80</span> -> <span class="str">"B — Ótimo!"</span>
+        nota >= <span class="num">70</span> -> <span class="str">"C — Bom"</span>
+        nota >= <span class="num">60</span> -> <span class="str">"D — Regular"</span>
+        <span class="kw">else</span>       -> <span class="str">"F — Reprovado"</span>
+    }
+    println(<span class="str">"Conceito: <span class="op">$conceito</span>"</span>)
+
+    <span class="cmt">// Loops</span>
+    <span class="kw">for</span> (i <span class="kw">in</span> <span class="num">1</span>..<span class="num">5</span>) print(<span class="str">"<span class="op">$i</span> "</span>)   <span class="cmt">// 1 2 3 4 5</span>
+    println()
+
+    <span class="kw">for</span> (i <span class="kw">in</span> <span class="num">1</span> until <span class="num">5</span>) print(<span class="str">"<span class="op">$i</span> "</span>) <span class="cmt">// 1 2 3 4</span>
+    println()
+
+    <span class="kw">for</span> (i <span class="kw">in</span> <span class="num">5</span> downTo <span class="num">1</span> step <span class="num">2</span>) print(<span class="str">"<span class="op">$i</span> "</span>) <span class="cmt">// 5 3 1</span>
+}</pre>
+      <div class="output-box">Aprovado<br>Conceito: B — Ótimo!<br>1 2 3 4 5<br>1 2 3 4<br>5 3 1</div>
+    </div>
+
+    <div class="tip">O <code>when</code> no Kotlin é muito mais poderoso que o <code>switch</code> do Java — ele pode verificar ranges, tipos e condições complexas, e retorna um valor diretamente.</div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" disabled>← Anterior</button>
+      <button class="btn btn-primary" onclick="showLesson(1)">Próximo: Funções →</button>
+    </div>
+  </div>
+
+  <!-- ==================== MÓDULO 2: FUNÇÕES ==================== -->
+  <div class="lesson" id="lesson-1">
+    <div class="lesson-header">
+      <div class="lesson-badge">⚙️ Módulo 2</div>
+      <h2>Funções e Lambdas</h2>
+      <p>Funções são cidadãos de primeira classe no Kotlin. Aprenda a criar funções expressivas, com parâmetros default, extensões e lambdas poderosas.</p>
+    </div>
+
+    <div class="section-title">Funções Básicas</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">functions.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="cmt">// Função simples</span>
+<span class="kw">fun</span> <span class="fn">somar</span>(a: <span class="tp">Int</span>, b: <span class="tp">Int</span>): <span class="tp">Int</span> {
+    <span class="kw">return</span> a + b
+}
+
+<span class="cmt">// Função de expressão única (single-expression)</span>
+<span class="kw">fun</span> <span class="fn">multiplicar</span>(a: <span class="tp">Int</span>, b: <span class="tp">Int</span>) = a * b
+
+<span class="cmt">// Parâmetros com valores padrão</span>
+<span class="kw">fun</span> <span class="fn">saudar</span>(nome: <span class="tp">String</span>, saudacao: <span class="tp">String</span> = <span class="str">"Olá"</span>) =
+    <span class="str">"<span class="op">$saudacao</span>, <span class="op">$nome</span>!"</span>
+
+<span class="cmt">// Argumentos nomeados</span>
+<span class="kw">fun</span> <span class="fn">main</span>() {
+    println(<span class="fn">somar</span>(<span class="num">3</span>, <span class="num">4</span>))           <span class="cmt">// 7</span>
+    println(<span class="fn">multiplicar</span>(<span class="num">5</span>, <span class="num">6</span>))    <span class="cmt">// 30</span>
+    println(<span class="fn">saudar</span>(<span class="str">"Maria"</span>))       <span class="cmt">// Olá, Maria!</span>
+    println(<span class="fn">saudar</span>(
+        nome = <span class="str">"João"</span>,
+        saudacao = <span class="str">"Bem-vindo"</span>
+    ))                             <span class="cmt">// Bem-vindo, João!</span>
+}</pre>
+      <div class="output-box">7 | 30 | Olá, Maria! | Bem-vindo, João!</div>
+    </div>
+
+    <div class="section-title">Extension Functions — superpoder do Kotlin</div>
+
+    <div class="concept">
+      <strong>Extension functions</strong> permitem adicionar métodos a classes existentes sem modificar seu código-fonte. É uma das funcionalidades mais poderosas e elegantes do Kotlin.
+    </div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">extensions.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="cmt">// Adicionando função à classe String</span>
+<span class="kw">fun</span> <span class="tp">String</span>.<span class="fn">isPalindromo</span>(): <span class="tp">Boolean</span> =
+    <span class="kw">this</span> == <span class="kw">this</span>.reversed()
+
+<span class="cmt">// Adicionando função à classe Int</span>
+<span class="kw">fun</span> <span class="tp">Int</span>.<span class="fn">vezes</span>(acao: () -> <span class="tp">Unit</span>) {
+    <span class="kw">for</span> (i <span class="kw">in</span> <span class="num">1</span>..<span class="kw">this</span>) acao()
+}
+
+<span class="cmt">// Extension property</span>
+<span class="kw">val</span> <span class="tp">String</span>.palavras: <span class="tp">List</span><<span class="tp">String</span>>
+    <span class="kw">get</span>() = split(<span class="str">" "</span>)
+
+<span class="kw">fun</span> <span class="fn">main</span>() {
+    println(<span class="str">"arara"</span>.<span class="fn">isPalindromo</span>())   <span class="cmt">// true</span>
+    println(<span class="str">"kotlin"</span>.<span class="fn">isPalindromo</span>())  <span class="cmt">// false</span>
+
+    <span class="num">3</span>.<span class="fn">vezes</span> { print(<span class="str">"🔥 "</span>) }         <span class="cmt">// 🔥 🔥 🔥</span>
+    println()
+
+    <span class="kw">val</span> frase = <span class="str">"Kotlin é incrível"</span>
+    println(frase.palavras)            <span class="cmt">// [Kotlin, é, incrível]</span>
+    println(frase.palavras.size)       <span class="cmt">// 3</span>
+}</pre>
+      <div class="output-box">true | false | 🔥 🔥 🔥 | [Kotlin, é, incrível] | 3</div>
+    </div>
+
+    <div class="section-title">Higher-Order Functions e Lambdas</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">lambdas.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="cmt">// Função que recebe outra função como parâmetro</span>
+<span class="kw">fun</span> <span class="fn">operar</span>(a: <span class="tp">Int</span>, b: <span class="tp">Int</span>, operacao: (<span class="tp">Int</span>, <span class="tp">Int</span>) -> <span class="tp">Int</span>): <span class="tp">Int</span> {
+    <span class="kw">return</span> operacao(a, b)
+}
+
+<span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="cmt">// Lambda como argumento</span>
+    <span class="kw">val</span> soma = <span class="fn">operar</span>(<span class="num">10</span>, <span class="num">5</span>) { a, b -> a + b }
+    <span class="kw">val</span> potencia = <span class="fn">operar</span>(<span class="num">2</span>, <span class="num">8</span>) { a, b ->
+        <span class="kw">var</span> resultado = <span class="num">1</span>
+        repeat(b) { resultado *= a }
+        resultado
+    }
+    println(<span class="str">"Soma: <span class="op">$soma</span>, Potência: <span class="op">$potencia</span>"</span>)
+
+    <span class="cmt">// Funções úteis com lambda</span>
+    <span class="kw">val</span> numeros = listOf(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>, <span class="num">7</span>, <span class="num">8</span>)
+
+    <span class="kw">val</span> pares = numeros.filter { it % <span class="num">2</span> == <span class="num">0</span> }
+    <span class="kw">val</span> dobros = numeros.map { it * <span class="num">2</span> }
+    <span class="kw">val</span> totalPares = pares.reduce { acc, x -> acc + x }
+
+    println(<span class="str">"Pares: <span class="op">$pares</span>"</span>)           <span class="cmt">// [2, 4, 6, 8]</span>
+    println(<span class="str">"Dobros: <span class="op">$dobros</span>"</span>)         <span class="cmt">// [2, 4, 6, 8, 10, 12, 14, 16]</span>
+    println(<span class="str">"Soma pares: <span class="op">$totalPares</span>"</span>)  <span class="cmt">// 20</span>
+}</pre>
+      <div class="output-box">Soma: 15, Potência: 256 | Pares: [2, 4, 6, 8] | Soma pares: 20</div>
+    </div>
+
+    <div class="tip">O <code>it</code> é o nome implícito do parâmetro quando uma lambda tem apenas um parâmetro. É uma convenção muito comum no Kotlin.</div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="showLesson(0)">← Básico</button>
+      <button class="btn btn-primary" onclick="showLesson(2)">Próximo: Classes →</button>
+    </div>
+  </div>
+
+  <!-- ==================== MÓDULO 3: CLASSES ==================== -->
+  <div class="lesson" id="lesson-2">
+    <div class="lesson-header">
+      <div class="lesson-badge">🏗️ Módulo 3</div>
+      <h2>Classes e Orientação a Objetos</h2>
+      <p>Kotlin tem um sistema OOP moderno e conciso. Data classes, sealed classes, herança, interfaces — tudo de forma elegante e segura.</p>
+    </div>
+
+    <div class="section-title">Classes e Data Classes</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">classes.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="cmt">// Classe normal</span>
+<span class="kw">class</span> <span class="tp">Pessoa</span>(
+    <span class="kw">val</span> nome: <span class="tp">String</span>,
+    <span class="kw">var</span> idade: <span class="tp">Int</span>
+) {
+    <span class="cmt">// Propriedade computada</span>
+    <span class="kw">val</span> ehAdulto: <span class="tp">Boolean</span>
+        <span class="kw">get</span>() = idade >= <span class="num">18</span>
+
+    <span class="kw">fun</span> <span class="fn">apresentar</span>() =
+        <span class="str">"Sou <span class="op">$nome</span>, <span class="op">$idade</span> anos. Adulto: <span class="op">$ehAdulto</span>"</span>
+}
+
+<span class="cmt">// Data class — equals, hashCode, toString, copy automáticos!</span>
+<span class="kw">data class</span> <span class="tp">Produto</span>(
+    <span class="kw">val</span> id: <span class="tp">Int</span>,
+    <span class="kw">val</span> nome: <span class="tp">String</span>,
+    <span class="kw">val</span> preco: <span class="tp">Double</span>
+)
+
+<span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="kw">val</span> pessoa = <span class="tp">Pessoa</span>(<span class="str">"Ana"</span>, <span class="num">25</span>)
+    println(pessoa.<span class="fn">apresentar</span>())
+
+    <span class="kw">val</span> prod1 = <span class="tp">Produto</span>(<span class="num">1</span>, <span class="str">"Notebook"</span>, <span class="num">4999.99</span>)
+    <span class="kw">val</span> prod2 = prod1.<span class="fn">copy</span>(preco = <span class="num">3999.99</span>)  <span class="cmt">// cópia com desconto</span>
+
+    println(prod1)   <span class="cmt">// Produto(id=1, nome=Notebook, preco=4999.99)</span>
+    println(prod2)   <span class="cmt">// Produto(id=1, nome=Notebook, preco=3999.99)</span>
+    println(prod1 == prod1.<span class="fn">copy</span>())  <span class="cmt">// true — equals por valor!</span>
+}</pre>
+      <div class="output-box">Sou Ana, 25 anos. Adulto: true | Produto(id=1, nome=Notebook, preco=4999.99)</div>
+    </div>
+
+    <div class="section-title">Herança e Sealed Classes</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">sealed.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="cmt">// Sealed class — hierarquia fechada e segura</span>
+<span class="kw">sealed class</span> <span class="tp">Resultado</span><T> {
+    <span class="kw">data class</span> <span class="tp">Sucesso</span><T>(<span class="kw">val</span> dados: T) : <span class="tp">Resultado</span><T>()
+    <span class="kw">data class</span> <span class="tp">Erro</span><T>(<span class="kw">val</span> mensagem: <span class="tp">String</span>) : <span class="tp">Resultado</span><T>()
+    <span class="kw">object</span> <span class="tp">Carregando</span> : <span class="tp">Resultado</span><<span class="tp">Nothing</span>>()
+}
+
+<span class="kw">fun</span> <span class="fn">processarResultado</span>(resultado: <span class="tp">Resultado</span><<span class="tp">String</span>>) {
+    <span class="cmt">// when é EXAUSTIVO com sealed classes</span>
+    <span class="kw">when</span> (resultado) {
+        <span class="kw">is</span> <span class="tp">Resultado.Sucesso</span> -> println(<span class="str">"✅ ${resultado.dados}"</span>)
+        <span class="kw">is</span> <span class="tp">Resultado.Erro</span>   -> println(<span class="str">"❌ ${resultado.mensagem}"</span>)
+        <span class="tp">Resultado.Carregando</span> -> println(<span class="str">"⏳ Carregando..."</span>)
+    }
+}
+
+<span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="fn">processarResultado</span>(<span class="tp">Resultado.Sucesso</span>(<span class="str">"Dados carregados!"</span>))
+    <span class="fn">processarResultado</span>(<span class="tp">Resultado.Erro</span>(<span class="str">"Sem conexão"</span>))
+    <span class="fn">processarResultado</span>(<span class="tp">Resultado.Carregando</span>)
+}</pre>
+      <div class="output-box">✅ Dados carregados! | ❌ Sem conexão | ⏳ Carregando...</div>
+    </div>
+
+    <div class="tip">Sealed classes são muito usadas para representar estados de UI (Loading, Success, Error) em aplicações Android com arquitetura MVVM/MVI.</div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="showLesson(1)">← Funções</button>
+      <button class="btn btn-primary" onclick="showLesson(3)">Próximo: Coleções →</button>
+    </div>
+  </div>
+
+  <!-- ==================== MÓDULO 4: COLEÇÕES ==================== -->
+  <div class="lesson" id="lesson-3">
+    <div class="lesson-header">
+      <div class="lesson-badge">📚 Módulo 4</div>
+      <h2>Coleções e Operações Funcionais</h2>
+      <p>A biblioteca de coleções do Kotlin é rica e expressiva. Aprenda a transformar, filtrar e agregar dados de forma elegante.</p>
+    </div>
+
+    <div class="section-title">List, Set e Map</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">collections.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="cmt">// List — imutável por padrão</span>
+    <span class="kw">val</span> frutas = listOf(<span class="str">"maçã"</span>, <span class="str">"banana"</span>, <span class="str">"laranja"</span>)
+    <span class="kw">val</span> frutrasMut = mutableListOf(<span class="str">"manga"</span>, <span class="str">"uva"</span>)
+    frutrasMut.add(<span class="str">"abacaxi"</span>)
+
+    <span class="cmt">// Set — sem duplicatas</span>
+    <span class="kw">val</span> numeros = setOf(<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">3</span>)
+    println(numeros)  <span class="cmt">// [1, 2, 3]</span>
+
+    <span class="cmt">// Map — pares chave-valor</span>
+    <span class="kw">val</span> capitais = mapOf(
+        <span class="str">"Brasil"</span> to <span class="str">"Brasília"</span>,
+        <span class="str">"França"</span> to <span class="str">"Paris"</span>,
+        <span class="str">"Japão"</span>  to <span class="str">"Tóquio"</span>
+    )
+
+    println(capitais[<span class="str">"Brasil"</span>])          <span class="cmt">// Brasília</span>
+    println(capitais.getOrDefault(<span class="str">"Rússia"</span>, <span class="str">"Desconhecida"</span>))
+
+    <span class="cmt">// Destructuring em map</span>
+    <span class="kw">for</span> ((pais, capital) <span class="kw">in</span> capitais) {
+        println(<span class="str">"<span class="op">$pais</span> → <span class="op">$capital</span>"</span>)
+    }
+}</pre>
+      <div class="output-box">[1, 2, 3] | Brasília | Desconhecida | Brasil → Brasília | França → Paris ...</div>
+    </div>
+
+    <div class="section-title">Pipeline de Operações</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">pipeline.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="kw">data class</span> <span class="tp">Aluno</span>(<span class="kw">val</span> nome: <span class="tp">String</span>, <span class="kw">val</span> nota: <span class="tp">Double</span>, <span class="kw">val</span> turma: <span class="tp">String</span>)
+
+<span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="kw">val</span> alunos = listOf(
+        <span class="tp">Aluno</span>(<span class="str">"Alice"</span>, <span class="num">9.5</span>, <span class="str">"A"</span>), <span class="tp">Aluno</span>(<span class="str">"Bob"</span>, <span class="num">6.2</span>, <span class="str">"B"</span>),
+        <span class="tp">Aluno</span>(<span class="str">"Carol"</span>, <span class="num">8.8</span>, <span class="str">"A"</span>), <span class="tp">Aluno</span>(<span class="str">"Dan"</span>, <span class="num">5.5</span>, <span class="str">"B"</span>),
+        <span class="tp">Aluno</span>(<span class="str">"Eva"</span>, <span class="num">7.9</span>, <span class="str">"A"</span>),  <span class="tp">Aluno</span>(<span class="str">"Fred"</span>, <span class="num">9.1</span>, <span class="str">"B"</span>)
+    )
+
+    <span class="cmt">// Pipeline encadeado de operações</span>
+    <span class="kw">val</span> top3 = alunos
+        .filter { it.nota >= <span class="num">7.0</span> }          <span class="cmt">// só aprovados</span>
+        .sortedByDescending { it.nota }       <span class="cmt">// ordem decrescente</span>
+        .take(<span class="num">3</span>)                              <span class="cmt">// top 3</span>
+        .map { <span class="str">"${it.nome}: ${it.nota}"</span> }    <span class="cmt">// formata</span>
+
+    println(<span class="str">"Top 3 alunos: <span class="op">$top3</span>"</span>)
+
+    <span class="cmt">// Agrupar por turma</span>
+    <span class="kw">val</span> porTurma = alunos.groupBy { it.turma }
+    porTurma.forEach { (turma, lista) ->
+        <span class="kw">val</span> media = lista.map { it.nota }.average()
+        println(<span class="str">"Turma <span class="op">$turma</span>: média <span class="op">%.1f</span>"</span>.format(media))
+    }
+
+    <span class="cmt">// Estatísticas</span>
+    <span class="kw">val</span> notas = alunos.map { it.nota }
+    println(<span class="str">"Máx: <span class="op">${notas.max()}</span> | Mín: <span class="op">${notas.min()}</span> | Média: <span class="op">${"%.2f".format(notas.average())}</span>"</span>)
+}</pre>
+      <div class="output-box">Top 3: [Alice: 9.5, Fred: 9.1, Carol: 8.8] | Turma A: média 8.7 | Turma B: média 6.9</div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="showLesson(2)">← Classes</button>
+      <button class="btn btn-primary" onclick="showLesson(4)">Próximo: Avançado →</button>
+    </div>
+  </div>
+
+  <!-- ==================== MÓDULO 5: AVANÇADO ==================== -->
+  <div class="lesson" id="lesson-4">
+    <div class="lesson-header">
+      <div class="lesson-badge">🚀 Módulo 5</div>
+      <h2>Coroutines e Recursos Avançados</h2>
+      <p>Coroutines tornam código assíncrono tão simples quanto síncrono. Mais scope functions, generics e o que há de mais moderno no Kotlin.</p>
+    </div>
+
+    <div class="section-title">Scope Functions</div>
+
+    <div class="concept">
+      Kotlin possui funções de escopo (<strong>let, run, with, apply, also</strong>) que permitem executar blocos de código no contexto de um objeto. São extremamente usadas no dia a dia.
+    </div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">scope-functions.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="kw">data class</span> <span class="tp">Carro</span>(<span class="kw">var</span> marca: <span class="tp">String</span> = <span class="str">""</span>, <span class="kw">var</span> velocidade: <span class="tp">Int</span> = <span class="num">0</span>)
+
+<span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="cmt">// apply — configura objeto e retorna ele mesmo</span>
+    <span class="kw">val</span> carro = <span class="tp">Carro</span>().<span class="fn">apply</span> {
+        marca = <span class="str">"Ferrari"</span>
+        velocidade = <span class="num">300</span>
+    }
+    println(carro)   <span class="cmt">// Carro(marca=Ferrari, velocidade=300)</span>
+
+    <span class="cmt">// let — transforma e lida com nullable</span>
+    <span class="kw">val</span> texto: <span class="tp">String?</span> = <span class="str">"  Kotlin  "</span>
+    texto?.<span class="fn">let</span> {
+        println(it.trim().uppercase())   <span class="cmt">// KOTLIN</span>
+    }
+
+    <span class="cmt">// also — efeito colateral (log, debug)</span>
+    <span class="kw">val</span> lista = mutableListOf(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>)
+        .<span class="fn">also</span> { println(<span class="str">"Antes: <span class="op">$it</span>"</span>) }
+        .also { it.add(<span class="num">4</span>); it.add(<span class="num">5</span>) }
+        .<span class="fn">also</span> { println(<span class="str">"Depois: <span class="op">$it</span>"</span>) }
+
+    <span class="cmt">// with — opera em objeto sem retornar ele</span>
+    <span class="kw">val</span> descricao = <span class="fn">with</span>(carro) {
+        <span class="str">"<span class="op">$marca</span> vai a <span class="op">$velocidade</span> km/h"</span>
+    }
+    println(descricao)
+}</pre>
+      <div class="output-box">Carro(marca=Ferrari, velocidade=300) | KOTLIN | Antes: [1,2,3] | Depois: [1,2,3,4,5]</div>
+    </div>
+
+    <div class="section-title">Coroutines — Assincronismo simples</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">coroutines.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="kw">import</span> kotlinx.coroutines.*
+
+<span class="cmt">// Função suspensa — pode ser pausada sem bloquear a thread</span>
+<span class="kw">suspend fun</span> <span class="fn">buscarDados</span>(id: <span class="tp">Int</span>): <span class="tp">String</span> {
+    delay(<span class="num">1000</span>)   <span class="cmt">// simula chamada de rede (não bloqueia!)</span>
+    <span class="kw">return</span> <span class="str">"Dados do usuário <span class="op">$id</span>"</span>
+}
+
+<span class="kw">fun</span> <span class="fn">main</span>() = runBlocking {
+    <span class="cmt">// launch — dispara coroutine (fire and forget)</span>
+    launch {
+        println(<span class="str">"Coroutine 1 iniciada"</span>)
+        delay(<span class="num">500</span>)
+        println(<span class="str">"Coroutine 1 concluída"</span>)
+    }
+
+    <span class="cmt">// async/await — paralelo com resultado</span>
+    <span class="kw">val</span> d1 = async { <span class="fn">buscarDados</span>(<span class="num">1</span>) }
+    <span class="kw">val</span> d2 = async { <span class="fn">buscarDados</span>(<span class="num">2</span>) }
+
+    <span class="cmt">// Ambas executam em paralelo! (1s total, não 2s)</span>
+    println(d1.await())
+    println(d2.await())
+
+    <span class="cmt">// Flow — stream de dados assíncrono</span>
+    <span class="kw">val</span> flow = flow {
+        <span class="kw">for</span> (i <span class="kw">in</span> <span class="num">1</span>..<span class="num">3</span>) {
+            delay(<span class="num">100</span>)
+            emit(i)   <span class="cmt">// emite valor</span>
+        }
+    }
+
+    flow.collect { valor -> print(<span class="str">"<span class="op">$valor</span> "</span>) }   <span class="cmt">// 1 2 3</span>
+}</pre>
+      <div class="output-box">Coroutine 1 iniciada → Dados do usuário 1 → Dados do usuário 2 → 1 2 3</div>
+    </div>
+
+    <div class="tip">Coroutines são leves — você pode criar milhares delas sem problemas. Para adicionar ao projeto: <code>implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")</code></div>
+
+    <div class="section-title">Generics e Reified Types</div>
+
+    <div class="code-card">
+      <div class="code-card-header">
+        <div style="display:flex;gap:6px;align-items:center">
+          <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        </div>
+        <div class="code-card-title">generics.kt</div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="cmt">// Classe genérica</span>
+<span class="kw">class</span> <span class="tp">Caixa</span><T>(<span class="kw">val</span> conteudo: T) {
+    <span class="kw">fun</span> <span class="fn">abrir</span>() = println(<span class="str">"Dentro: <span class="op">$conteudo</span>"</span>)
+}
+
+<span class="cmt">// Reified — permite usar o tipo em tempo de execução!</span>
+<span class="kw">inline fun</span> <<span class="kw">reified</span> T> <span class="fn">filtrarPorTipo</span>(lista: <span class="tp">List</span><Any>): <span class="tp">List</span><T> {
+    <span class="kw">return</span> lista.filterIsInstance<T>()
+}
+
+<span class="kw">fun</span> <span class="fn">main</span>() {
+    <span class="kw">val</span> caixaInt = <span class="tp">Caixa</span>(<span class="num">42</span>)
+    <span class="kw">val</span> caixaStr = <span class="tp">Caixa</span>(<span class="str">"Kotlin"</span>)
+    caixaInt.<span class="fn">abrir</span>()   <span class="cmt">// Dentro: 42</span>
+    caixaStr.<span class="fn">abrir</span>()   <span class="cmt">// Dentro: Kotlin</span>
+
+    <span class="kw">val</span> misto = listOf(<span class="num">1</span>, <span class="str">"dois"</span>, <span class="num">3</span>, <span class="str">"quatro"</span>, <span class="num">5</span>)
+    <span class="kw">val</span> soInts = <span class="fn">filtrarPorTipo</span><<span class="tp">Int</span>>(misto)
+    <span class="kw">val</span> soStrings = <span class="fn">filtrarPorTipo</span><<span class="tp">String</span>>(misto)
+
+    println(<span class="str">"Inteiros: <span class="op">$soInts</span>"</span>)     <span class="cmt">// [1, 3, 5]</span>
+    println(<span class="str">"Strings: <span class="op">$soStrings</span>"</span>)   <span class="cmt">// [dois, quatro]</span>
+}</pre>
+      <div class="output-box">Dentro: 42 | Dentro: Kotlin | Inteiros: [1, 3, 5] | Strings: [dois, quatro]</div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="showLesson(3)">← Coleções</button>
+      <button class="btn btn-primary" onclick="showLesson(0)" style="background: linear-gradient(135deg, var(--kotlin-orange), #e05a20)">
+        🎉 Recomeçar
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const lessons = document.querySelectorAll('.lesson');
+  const tabs = document.querySelectorAll('.tab');
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+  let current = 0;
+
+  function showLesson(index) {
+    lessons[current].classList.remove('active');
+    tabs[current].classList.remove('active');
+    current = index;
+    lessons[current].classList.add('active');
+    tabs[current].classList.add('active');
+
+    const pct = ((index + 1) / lessons.length) * 100;
+    progressFill.style.width = pct + '%';
+    progressText.textContent = `Módulo ${index + 1} de ${lessons.length}`;
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-card').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copiar';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Init progress
+  showLesson(0);
+</script>
+</body>
+</html>
